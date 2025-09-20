@@ -78,6 +78,7 @@ This API module powers the **scoreboard system** for the website. Its goal is to
 
 ###  Scaling
 - Write score to database via a queue (Kafka)
+- Scale API server when there are too many request
 
 ###  Testing Strategy
 - Unit Tests: mock dependency to test score validation, auth middleware, leaderboard logic.
