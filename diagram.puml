@@ -1,0 +1,48 @@
+@startuml ScoreboardFlowWithZSet
+
+title Scoreboard API - Flow Diagram 
+
+actor User
+participant "Frontend (Client)" as Frontend
+participant "API Server" as APIServer
+database "Database" as DB
+collections "Redis ZSET\n(leaderboard)" as Redis
+participant "Real-time Layer\n(WebSocket/SSE)" as Realtime
+
+== User Action ==
+
+User -> Frontend : Perform valid action
+Frontend -> APIServer : POST /score/update\n(with JWT + score_increase)
+APIServer -> APIServer : Verify JWT token
+APIServer -> APIServer : Validate score update logic
+
+== Update Score ==
+
+APIServer -> DB : Update user score
+DB --> APIServer : Score updated
+
+== Update Leaderboard ==
+
+APIServer -> Redis : ZADD leaderboard <score> <user_id>
+Redis --> APIServer : OK
+
+== Broadcast Real-time ==
+
+APIServer -> Redis : ZREVRANGE leaderboard 0 9 WITHSCORES
+Redis --> APIServer : Return top 10
+APIServer -> Realtime : Push updated leaderboard
+Realtime -> Frontend : WebSocket/SSE update
+Frontend -> User : UI shows new leaderboard
+
+== When Client Calls Leaderboard ==
+
+Frontend -> APIServer : GET /score/leaderboard
+APIServer -> Redis : ZREVRANGE leaderboard 0 9 WITHSCORES
+Redis --> APIServer : Return top 10
+APIServer --> Frontend : Respond with leaderboard
+
+== Cronjob slicing Leaderboard, every 5 minutes ==
+APIServer -> Redis : periodically ZREMRANGEBYRANK to remove element on leaderboard, only keep the highest 10
+return OK
+
+@enduml
