@@ -4,7 +4,6 @@
 
 This API module powers the **scoreboard system** for the website. Its goal is to handle **user score updates** triggered by completed actions and to display the **top 10 user scores** in real-time.
 
----
 
 ## 🔧 Core Features
 
@@ -13,7 +12,16 @@ This API module powers the **scoreboard system** for the website. Its goal is to
 3. 🔐 Ensure only authenticated users can update scores.
 4. ⚠️ Prevent score manipulation or abuse from malicious users.
 
----
+ 
+
+## 🛠️ Tech Stack
+1. ReactJS for frontend
+2. NodeJS for API server, Docker deployment on AWS
+3. Redis, Mysql
+4. Express, Sequelize, JWT, SSE
+5. Typescript, Babel, Eslint
+6. ECR, ECS, Codecommit, Codebuild, RDS, API gateway, VPC, EC2, Cloudwatch
+
 
 ## 🔗 API Endpoints
 
@@ -64,6 +72,20 @@ This API module powers the **scoreboard system** for the website. Its goal is to
 {
   "user_id": "string",
   "score_increase": "number"
+}
+```
+
+## 🔗 Leaderboard SSE endpoint
+
+### 1. `GET /api/v1/leaderboard/stream`
+
+- **Description**: Get live leaderboard data
+- **Request Header**: Content-Type: text/event-stream
+- **Response Body**:
+
+```json
+{
+  "leaderboard": []
 }
 ```
 

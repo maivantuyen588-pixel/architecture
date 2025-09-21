@@ -7,7 +7,7 @@ participant "Frontend (Client)" as Frontend
 participant "API Server" as APIServer
 database "Database" as DB
 collections "Redis ZSET\n(leaderboard)" as Redis
-participant "Real-time Layer\n(WebSocket/SSE)" as Realtime
+participant "Real-time Layer\n(SSE)" as Realtime
 
 == User Action ==
 
@@ -31,7 +31,7 @@ Redis --> APIServer : OK
 APIServer -> Redis : ZREVRANGE leaderboard 0 9 WITHSCORES
 Redis --> APIServer : Return top 10
 APIServer -> Realtime : Push updated leaderboard
-Realtime -> Frontend : WebSocket/SSE update
+Realtime -> Frontend : SSE update
 Frontend -> User : UI shows new leaderboard
 
 == When Client Calls Leaderboard ==
