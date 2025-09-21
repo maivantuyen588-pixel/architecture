@@ -85,7 +85,7 @@ This API module powers the **scoreboard system** for the website. Its goal is to
 
 ```json
 {
-  "leaderboard": []
+  "leaderboard": "array"
 }
 ```
 
